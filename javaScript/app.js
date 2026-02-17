@@ -90,9 +90,10 @@ const loadCategories = async () => {
 //? Display Categories
 const displayCategories = (categories) => {
   categories.forEach((categorie) => {
+    const activeClass = categorie === "All" ? "bg-indigo-600 text-white" : "";
     categorieContainer.innerHTML += `
-        <h1 class="cursor-pointer hover:bg-indigo-600 hover:text-white border 
-            border-gray-200 text-lg px-3 py-1 md:p-2 md:px-5 md:text-xl rounded-full categorie">${categorie}</h1>
+        <h1 class="cursor-pointer transition-all duration-150 active:translate-y-0.5 hover:bg-indigo-600 hover:text-white border 
+            border-gray-200 text-lg px-3 py-1 md:p-2 md:px-5 md:text-xl rounded-full categorie ${activeClass}">${capitalizeFirstLetter(categorie)}</h1>
     `;
   });
 };
@@ -138,7 +139,25 @@ const displayAllProducts = (products) => {
   });
 };
 
+// Add Active Color
+categorieContainer.addEventListener("click", (e) => {
+//   if (!e.target.closest("h1")) return;
+  const allH1Tags = document.querySelectorAll(".categorie");
+  allH1Tags.forEach((h1) => {
+    h1.classList.remove("bg-indigo-600");
+    h1.classList.remove("text-white");
+  });
 
+  if (e.target.closest("h1")) {
+    e.target.classList.add("bg-indigo-600");
+    e.target.classList.add("text-white");
+  }
+});
+
+// Capitalize first letter
+const capitalizeFirstLetter = (text) => {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
 
 loadProducts();
 loadCategories();
