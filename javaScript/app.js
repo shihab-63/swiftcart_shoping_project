@@ -6,6 +6,34 @@ const categorieContainer = document.getElementById("categorie-container");
 const allCardContainer = document.getElementById("all-card-container");
 const dailogModal = document.getElementById("my_modal_5");
 const showModalDetails = document.getElementById("showModalDetails");
+const sections = document.querySelectorAll(".page-section");
+const navLinks = document.querySelectorAll(".nav-item");
+
+// Routeing Functionality
+// Routeing Functionality
+function switchTab(tabId) {
+  // ১. সেকশন হাইড/শো করার পার্ট (এটা ঠিক আছে)
+  sections.forEach((section) => {
+    section.classList.add("hidden");
+  });
+  const activeSection = document.getElementById(tabId);
+  if (activeSection) {
+    activeSection.classList.remove("hidden");
+  }
+
+  // ২. লিংকের কালার চেঞ্জ করার পার্ট (সংশোধিত) 🔥
+  navLinks.forEach((link) => {
+    if (link.getAttribute("data-tab") === tabId) {
+      // যদি লিংকটি Active হয়:
+      link.classList.add("text-blue-600"); // নীল (বা তোমার পছন্দমত red-600) কালার দাও
+      link.classList.remove("text-gray-600"); // ধূসর কালার সরাও
+    } else {
+      // যদি লিংকটি Inactive হয়:
+      link.classList.remove("text-blue-600"); // নীল কালার সরাও
+      link.classList.add("text-gray-600"); // ধূসর কালার দাও (ডিফল্ট কালার)
+    }
+  });
+}
 
 if (menuBtn) {
   menuBtn.addEventListener("click", () => {
@@ -62,7 +90,7 @@ const displayProduct = (products) => {
                   <h1 class="text-xl pt-4 truncate">${product.title}</h1>
                   <p class="text-2xl font-medium py-4"><span>$</span><span>${product.price}</span></p>
                   <div class="flex justify-between">
-                    <button class="btn px-10 md:px-14">
+                    <button onclick="singleProductDetails(${product.id})" class="btn px-10 md:px-14">
                       <i class="fa-regular fa-eye"></i> Details
                     </button>
                     <button class="btn btn-primary px-10 md:px-14">
@@ -220,3 +248,4 @@ const displayModalDetails = (modals) => {
 
 loadProducts();
 loadCategories();
+switchTab("home");
