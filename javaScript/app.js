@@ -4,6 +4,8 @@ const dropWordMenu = document.getElementById("dropdown-menu");
 const cardContainer = document.getElementById("card-container");
 const categorieContainer = document.getElementById("categorie-container");
 const allCardContainer = document.getElementById("all-card-container");
+const dailogModal = document.getElementById("my_modal_5");
+const showModalDetails = document.getElementById("showModalDetails");
 
 if (menuBtn) {
   menuBtn.addEventListener("click", () => {
@@ -179,11 +181,42 @@ const capitalizeFirstLetter = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
-// Single Product Details
-const singleProductDetails = (id) => {
-    // Load single product details
-    
-}
+//! Load Single Product Details
+const singleProductDetails = async (id) => {
+  // Load single product details
+  const url = `https://fakestoreapi.com/products/${id}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    displayModalDetails(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//? Display Modal Details
+const displayModalDetails = (modals) => {
+  showModalDetails.innerHTML = "";
+
+  showModalDetails.innerHTML += `
+    <div class="flex-1 flex justify-center items-center bg-white p-5 rounded-lg">
+          <img src="${modals.image}" class="max-h-[300px] object-contain" alt="product-image" />
+    </div>
+    <div class="flex-1 space-y-4 p-4">
+          <h2 class="text-2xl font-bold">${modals.title}</h2>
+          <p class="text-gray-500 text-sm">${modals.description}</p>
+          <div class="flex justify-between items-center gap-2">
+             <span class="badge p-3 badge-primary badge-outline">${modals.category}</span>
+             <span class="flex items-center text-xl text-yellow-500">
+                <i class="fa-solid fa-star mr-1"></i> ${modals.rating.rate}
+             </span>
+          </div>
+          <h3 class="text-3xl font-bold mt-6">$${modals.price}</h3>
+    </div>
+  `;
+  dailogModal.showModal();
+};
 
 loadProducts();
 loadCategories();
