@@ -126,7 +126,7 @@ const displayAllProducts = (products) => {
                   <h1 class="text-xl pt-4 truncate">${product.title}</h1>
                   <p class="text-2xl font-medium py-4"><span>$</span><span>${product.price}</span></p>
                   <div class="flex justify-between">
-                    <button class="btn px-10 md:px-6">
+                    <button onclick="singleProductDetails(${product.id})" class="btn px-10 md:px-6">
                       <i class="fa-regular fa-eye"></i> Details
                     </button>
                     <button class="btn btn-primary px-10 md:px-10">
@@ -141,7 +141,7 @@ const displayAllProducts = (products) => {
 
 // Add Active Color
 categorieContainer.addEventListener("click", (e) => {
-//   if (!e.target.closest("h1")) return;
+  //   if (!e.target.closest("h1")) return;
   const allH1Tags = document.querySelectorAll(".categorie");
   allH1Tags.forEach((h1) => {
     h1.classList.remove("bg-indigo-600");
@@ -152,12 +152,38 @@ categorieContainer.addEventListener("click", (e) => {
     e.target.classList.add("bg-indigo-600");
     e.target.classList.add("text-white");
   }
+
+  // Show single categories
+  displayFilterCategorie(e.target.closest("h1").innerText);
 });
+
+//! Load Single Categorie
+const displayFilterCategorie = async (category) => {
+  let url = `https://fakestoreapi.com/products`;
+
+  if (category !== "All") {
+    url = `https://fakestoreapi.com/products/category/${category.toLowerCase()}`;
+  }
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    displayAllProducts(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // Capitalize first letter
 const capitalizeFirstLetter = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
+
+// Single Product Details
+const singleProductDetails = (id) => {
+    // Load single product details
+    
+}
 
 loadProducts();
 loadCategories();
