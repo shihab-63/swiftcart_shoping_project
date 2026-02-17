@@ -9,6 +9,9 @@ const showModalDetails = document.getElementById("showModalDetails");
 const sections = document.querySelectorAll(".page-section");
 const navLinks = document.querySelectorAll(".nav-item");
 
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let allProducts = [];
+
 // Routeing Functionality
 function switchTab(tabId) {
   sections.forEach((section) => {
@@ -50,6 +53,7 @@ const loadProducts = async () => {
   try {
     const response = await fetch(url);
     const data = await response.json();
+    allProducts = data;
     const threeData = data.slice(0, 3);
     displayAllProducts(data);
     displayProduct(threeData);
@@ -89,7 +93,7 @@ const displayProduct = (products) => {
                     <button onclick="singleProductDetails(${product.id})" class="btn px-10 md:px-14">
                       <i class="fa-regular fa-eye"></i> Details
                     </button>
-                    <button class="btn btn-primary px-10 md:px-14">
+                    <button onclick="addToCart(${product.id})" class="btn btn-primary px-10 md:px-14">
                       <i class="fa-solid fa-cart-shopping"></i> Add
                     </button>
                   </div>
@@ -155,7 +159,7 @@ const displayAllProducts = (products) => {
                     <button onclick="singleProductDetails(${product.id})" class="btn px-10 md:px-6">
                       <i class="fa-regular fa-eye"></i> Details
                     </button>
-                    <button class="btn btn-primary px-10 md:px-10">
+                    <button onclick="addToCart(${product.id})" class="btn btn-primary px-10 md:px-10">
                       <i class="fa-solid fa-cart-shopping"></i> Add
                     </button>
                   </div>
@@ -272,6 +276,70 @@ const showLoading = () => {
     `;
 };
 
+// Add to Cart
+const addToCart = (id) => {
+  const product = allProducts.find((p) => p.id === id);
+  cart.push(product);
+  updateCartCount();
+  console.log("Product added:", product.title);
+};
+
+// Modal Open
+const showCart = () => {
+  const cartContainer = document.getElementById("cart-items-container");
+  const totalPriceElement = document.getElementById("cart-total-price");
+  const cartModal = document.getElementById("cart_modal");
+
+  cartContainer.innerHTML = "";
+  let totalPrice = 0;
+
+  if (cart.length === 0) {
+    cartContainer.innerHTML = `<p class="text-center text-gray-400 py-4">Your cart is empty.</p>`;
+  } else {
+    cart.forEach((item, index) => {
+      totalPrice += item.price;
+
+      cartContainer.innerHTML += `
+        <div class="flex items-center justify-between border-b border-gray-100 pb-2 mb-2">
+            <div class="flex items-center gap-3">
+                <img src="${item.image}" class="w-10 h-10 object-contain p-1 border rounded">
+                <div>
+                    <h4 class="font-bold text-sm w-40 truncate" title="${item.title}">${item.title}</h4>
+                    <p class="text-gray-500 text-xs">$${item.price}</p>
+                </div>
+            </div>
+            
+            <button onclick="removeFromCart(${index})" class="btn btn-sm btn-circle btn-ghost text-red-500 hover:bg-red-50">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        </div>
+      `;
+    });
+  }
+
+  if (totalPriceElement) {
+    totalPriceElement.innerText = totalPrice.toFixed(2);
+  }
+  if (!cartModal.open) {
+    cartModal.showModal();
+  }
+};
+
+const removeFromCart = (index) => {
+  cart.splice(index, 1);
+  updateCartCount();
+  showCart();
+};
+
+const updateCartCount = () => {
+  const countElement = document.getElementById("cart-count");
+  if (countElement) {
+    countElement.innerText = cart.length;
+  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+};
+
 loadProducts();
 loadCategories();
 switchTab("home");
+updateCartCount();
