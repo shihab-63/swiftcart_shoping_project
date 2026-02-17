@@ -10,9 +10,7 @@ const sections = document.querySelectorAll(".page-section");
 const navLinks = document.querySelectorAll(".nav-item");
 
 // Routeing Functionality
-// Routeing Functionality
 function switchTab(tabId) {
-  // ১. সেকশন হাইড/শো করার পার্ট (এটা ঠিক আছে)
   sections.forEach((section) => {
     section.classList.add("hidden");
   });
@@ -21,16 +19,13 @@ function switchTab(tabId) {
     activeSection.classList.remove("hidden");
   }
 
-  // ২. লিংকের কালার চেঞ্জ করার পার্ট (সংশোধিত) 🔥
   navLinks.forEach((link) => {
     if (link.getAttribute("data-tab") === tabId) {
-      // যদি লিংকটি Active হয়:
-      link.classList.add("text-blue-600"); // নীল (বা তোমার পছন্দমত red-600) কালার দাও
-      link.classList.remove("text-gray-600"); // ধূসর কালার সরাও
+      link.classList.add("text-blue-600");
+      link.classList.remove("text-gray-600");
     } else {
-      // যদি লিংকটি Inactive হয়:
-      link.classList.remove("text-blue-600"); // নীল কালার সরাও
-      link.classList.add("text-gray-600"); // ধূসর কালার দাও (ডিফল্ট কালার)
+      link.classList.remove("text-blue-600");
+      link.classList.add("text-gray-600");
     }
   });
 }
@@ -49,6 +44,7 @@ if (dropWordMenu) {
 
 //! Load All Products
 const loadProducts = async () => {
+  showLoading();
   const url = `https://fakestoreapi.com/products`;
 
   try {
@@ -244,6 +240,36 @@ const displayModalDetails = (modals) => {
     </div>
   `;
   dailogModal.showModal();
+};
+
+// Show Loading
+const showLoading = () => {
+  allCardContainer.innerHTML = `
+        <div class="flex w-52 flex-col gap-4">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+        </div>
+        <div class="flex w-52 flex-col gap-4">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+        </div>
+        <div class="flex w-52 flex-col gap-4">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+        </div>
+        <div class="flex w-52 flex-col gap-4">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+        </div>
+    `;
 };
 
 loadProducts();
